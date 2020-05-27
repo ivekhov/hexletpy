@@ -1,2 +1,2 @@
 # hexletpy
-# esercises on hexlet classes
+# exercises on hexlet classes
