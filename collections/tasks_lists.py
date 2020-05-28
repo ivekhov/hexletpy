@@ -558,9 +558,6 @@ frame = [
 ]
 
 
-show(frame)
-dot = ['@']
-
 def double_symb(symb):
     return str(symb) + str(symb)
 
@@ -577,8 +574,6 @@ def enlarge(frame):
         frame = result
         return frame
     return frame
-# show(enlarge(frame))
-# show(enlarge(dot))
 
 
 # BEGIN
@@ -619,8 +614,130 @@ def test_enlarge():
     ]
 
 
+def sum_of_intervals(intervals):
+    intervals.sort()
+    mins = [intervals[0][0]]
+    maxs = [intervals[0][1]]
+    for chunk in intervals[1:]:
+        if chunk[0] < chunk[1]:
+            for ix in range(len(mins)):
+                if chunk[0] >= mins[ix] and chunk[1] <= maxs[ix]:
+                    continue
+                elif (chunk[0] >= mins[ix] and chunk[0] < maxs[ix]) and chunk[1] > maxs[ix]:
+                    maxs[ix] = chunk[1]
+                elif (chunk[0] < mins[ix] and chunk[1] > mins[ix]) or chunk[1] <= maxs[ix]:
+                    mins[ix] = chunk[0]
+                elif chunk[0] > maxs[ix] or chunk[1] < mins[ix]:
+                    mins.append(chunk[0])
+                    maxs.append(chunk[1])
+    return sum(list(map(lambda x, y: x - y, maxs, mins)))
+
+
+# Example
+# BEGIN
+def sum_of_intervals_x(intervals):
+    values = []
+    for start, end in intervals:
+        for i in range(start, end):
+            if i not in values:
+                values.append(i)
+    return len(values)
+# END
+
+
+def test_sum_of_intervals():
+    assert sum_of_intervals([[5, 5]]) == 0
+    assert sum_of_intervals([[3, 10]]) == 7
+
+    assert sum_of_intervals([
+        [1, 2],
+        [11, 12],
+    ]) == 2
+
+    assert sum_of_intervals([
+        [2, 7],
+        [6, 6],
+    ]) == 5
+
+    assert sum_of_intervals([
+        [1, 5],
+        [1, 10],
+    ]) == 9
+
+    assert sum_of_intervals([
+        [1, 9],
+        [7, 12],
+        [3, 4],
+    ]) == 11
+
+    assert sum_of_intervals([
+        [7, 10],
+        [1, 4],
+        [2, 5],
+    ]) == 7
+
+    assert sum_of_intervals([
+        [1, 5],
+        [9, 19],
+        [1, 7],
+        [16, 19],
+        [5, 11],
+    ]) == 18
+
+    assert sum_of_intervals([
+        [1, 3],
+        [20, 25],
+    ]) == 7
+
+
+
+
+
+
+MONEY = (  # noqa: WPS317
+    1, 20, 2, 5, 20,
+    3, 5, 2, 10, 2,
+    20, 2, 20, 1, 2,
+    1, 1, 2, 10, 20, 3,
+)
+
+
+def visualize(coins, bar_char='₽'):
+    pass
+
+
+def test_visualize():
+    assert visualize(MONEY) == """
+   6             
+   ₽₽          5 
+4  ₽₽          ₽₽
+₽₽ ₽₽          ₽₽
+₽₽ ₽₽ 2  2  2  ₽₽
+₽₽ ₽₽ ₽₽ ₽₽ ₽₽ ₽₽
+₽₽ ₽₽ ₽₽ ₽₽ ₽₽ ₽₽
+-----------------
+1  2  3  5  10 20
+"""[1:-1]  # noqa: W291
+
+    assert visualize(MONEY, bar_char='$') == """
+   6             
+   $$          5 
+4  $$          $$
+$$ $$          $$
+$$ $$ 2  2  2  $$
+$$ $$ $$ $$ $$ $$
+$$ $$ $$ $$ $$ $$
+-----------------
+1  2  3  5  10 20
+"""[1:-1]  # noqa: W291
+
+
+
+
 if __name__ == '__main__':
-    test_enlarge()
+
+    # test_sum_of_intervals()
+    # test_enlarge()
     # test_multiply()
     # test_find_length_length()
     # test_find_summary_ranges()
