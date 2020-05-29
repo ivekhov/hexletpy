@@ -701,18 +701,58 @@ MONEY = (  # noqa: WPS317
     1, 1, 2, 10, 20, 3,
 )
 
+from collections import Counter
+
 
 def visualize(coins, bar_char='₽'):
-    pass
+    c = Counter(coins)
+    temp = list(c.keys())
+    temp.sort()
+    new_dict = {}
+    for key in temp:
+        new_dict[key] = c[key]
+    local_max = max(new_dict.values())
+    picture_height = local_max + 3
+    countdown = picture_height
+    result_array = []
+    visual = ''
+
+    for row in range(picture_height+1):
+        empty_cell = '  '
+        rows_delim = ' '
+        row4print = ''
+        if countdown >= 2:
+            for nominal in temp:
+                if new_dict[nominal] == countdown:
+                    row4print += (str(new_dict[nominal]) + rows_delim + rows_delim)
+                elif new_dict[nominal] > countdown:
+                    row4print += (bar_char + bar_char + rows_delim)
+                else:
+                    row4print += (empty_cell + rows_delim)
+        elif countdown == 1:
+            row4print += ('---' * len(temp))
+        elif countdown == 0:
+            for nominal in new_dict.keys():
+                if nominal < 10:
+                    row4print += (str(nominal) + rows_delim + rows_delim)
+                else:
+                    row4print += (str(nominal) + rows_delim)
+        countdown = countdown - 1
+        result_array.append(row4print[:-1])
+    for row in result_array:
+        visual += (row + '\n')
+    return visual
+
+# print(visualize(MONEY))
 
 
 def test_visualize():
     assert visualize(MONEY) == """
-   6             
+   6..7..7             
    ₽₽          5 
 4  ₽₽          ₽₽
 ₽₽ ₽₽          ₽₽
-₽₽ ₽₽ 2  2  2  ₽₽
+₽₽ ₽₽ 2..2  2  ₽₽
 ₽₽ ₽₽ ₽₽ ₽₽ ₽₽ ₽₽
 ₽₽ ₽₽ ₽₽ ₽₽ ₽₽ ₽₽
 -----------------
@@ -735,7 +775,8 @@ $$ $$ $$ $$ $$ $$
 
 
 if __name__ == '__main__':
-
+    print(visualize(MONEY))
+    # test_visualize()
     # test_sum_of_intervals()
     # test_enlarge()
     # test_multiply()
