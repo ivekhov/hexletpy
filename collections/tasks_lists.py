@@ -712,47 +712,93 @@ def visualize(coins, bar_char='₽'):
     for key in temp:
         new_dict[key] = c[key]
     local_max = max(new_dict.values())
-    picture_height = local_max + 3
-    countdown = picture_height
+    picture_height = local_max + 1     #
+    countdown = local_max
     result_array = []
     visual = ''
+    empty_cell = '  '
+    rows_delim = ' '
 
-    for row in range(picture_height+1):
-        empty_cell = '  '
-        rows_delim = ' '
+    for _ in range(picture_height):
         row4print = ''
-        if countdown >= 2:
-            for nominal in temp:
-                if new_dict[nominal] == countdown:
-                    row4print += (str(new_dict[nominal]) + rows_delim + rows_delim)
-                elif new_dict[nominal] > countdown:
-                    row4print += (bar_char + bar_char + rows_delim)
-                else:
-                    row4print += (empty_cell + rows_delim)
-        elif countdown == 1:
-            row4print += ('---' * len(temp))
-        elif countdown == 0:
-            for nominal in new_dict.keys():
-                if nominal < 10:
-                    row4print += (str(nominal) + rows_delim + rows_delim)
-                else:
-                    row4print += (str(nominal) + rows_delim)
+        for nominal in temp:
+            if new_dict[nominal] == countdown:
+                row4print += (str(new_dict[nominal]) + rows_delim + rows_delim)
+            elif new_dict[nominal] > countdown:
+                row4print += (bar_char + bar_char + rows_delim)
+            elif new_dict[nominal] < countdown:
+                row4print += (empty_cell + rows_delim)
         countdown = countdown - 1
         result_array.append(row4print[:-1])
+
+    line = ('---' * len(temp))
+    line = line[:-1]
+    result_array.append(line)
+
+    number_row = ''
+    for nominal in new_dict.keys():
+        if nominal < 10:
+            number_row += (str(nominal) + rows_delim + rows_delim)
+        else:
+            number_row += (str(nominal) + rows_delim)
+    result_array.append(number_row)
     for row in result_array:
         visual += (row + '\n')
-    return visual
+    return visual[:-2]
 
-# print(visualize(MONEY))
-
-
-def test_visualize():
-    assert visualize(MONEY) == """
-   6..7..7             
+expected = """
+   6             
    ₽₽          5 
 4  ₽₽          ₽₽
 ₽₽ ₽₽          ₽₽
-₽₽ ₽₽ 2..2  2  ₽₽
+₽₽ ₽₽ 2  2  2  ₽₽
+₽₽ ₽₽ ₽₽ ₽₽ ₽₽ ₽₽
+₽₽ ₽₽ ₽₽ ₽₽ ₽₽ ₽₽
+-----------------
+1  2  3  5  10 20
+"""[1:-1]
+
+# my = visualize(MONEY)
+# print(expected)
+# print(my)
+
+# Example:
+ # BEGIN
+ #    counts = Counter(coins)
+ #    nominals = sorted(counts.keys())
+ #    highest_stack = max(counts.values())
+ #
+ #    rows = []
+ #    delimiter = ''
+ #
+ #    for level in range(highest_stack, -1, -1):
+ #        row = ''
+ #        for _, bar in sorted(counts.items()):
+ #            if bar > level:
+ #                row += '{} '.format(bar_char * 2)
+ #            elif bar == level and bar != 0:
+ #                row += '{:<2d} '.format(bar)
+ #                delimiter += '---'
+ #            else:
+ #                row += '   '
+ #        rows.append(row[:-1])
+ #
+ #    rows.append(delimiter[:-1])
+ #    row = ''
+ #    for nominal in nominals:
+ #        row += '{:<2d} '.format(nominal)
+ #    rows.append(row[:-1])
+ #
+ #    return '\n'.join(rows)
+# END
+
+def test_visualize():
+    assert visualize(MONEY) == """
+   6             
+   ₽₽          5 
+4  ₽₽          ₽₽
+₽₽ ₽₽          ₽₽
+₽₽ ₽₽ 2  2  2  ₽₽
 ₽₽ ₽₽ ₽₽ ₽₽ ₽₽ ₽₽
 ₽₽ ₽₽ ₽₽ ₽₽ ₽₽ ₽₽
 -----------------
@@ -772,10 +818,136 @@ $$ $$ $$ $$ $$ $$
 """[1:-1]  # noqa: W291
 
 
+test = [[1, 2],
+        [3, 4] ]
+
+# [1, 2, 4, 3]
+matrix = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+]
+
+test2 = [
+[[1, 2, 3], [8, 9, 4], [7, 6, 5]]
+]
+
+
+test3 = [['b', 'c', 'a'], ['3', True, 11], [None, 'foo', 0]]
+# ['b', 'c', 'a', 11, 0, 'foo', None, '3', True]
+
+from math import ceil as ceil
+
+
+def snail_path(matrix):
+    if matrix == []:
+        return []
+    if matrix == [[]]:
+        return []
+    result = []
+
+    row_start = 0
+    row_stop = len(matrix) - 1
+
+    col_start = 0
+    col_stop = len(matrix[0])
+    if col_stop == 1:
+        for row in matrix:
+            result.append(row[0])
+        return result
+
+    # 2
+    if len(matrix) > len(matrix[0]):
+        min_len = len(matrix[0])
+    else:
+        min_len = len(matrix)
+    cycles_count = ceil(min_len / 2)
+    start_point = 0
+
+    size = len(matrix) * len(matrix[0])
+
+    # 3
+    while cycles_count > 0 and len(result) < size:
+
+        if row_start == row_stop:
+            for item in matrix[row_stop][col_start:col_stop]:
+                result.append(item)
+            continue
+
+    # for cycle in range(cycles_count):
+        ###
+        result.append(matrix[start_point][start_point])
+        # 1
+        for item in matrix[row_start][col_start+1 : col_stop]:
+            result.append(item)
+        # 2
+        for item in range(row_start + 1, row_stop + 1):
+            result.append(matrix[item][-1])
+        # 3
+        rev = []
+        for item in matrix[row_stop]:
+            rev.append(item)
+        rev.reverse()
+        for item in rev[col_start+1:col_stop]:
+            result.append(item)
+
+        # 4
+        rev_col = []
+        for row in matrix[row_start + 1: row_stop]:
+            rev_col.append(row[col_start])
+        for item in rev_col:
+            result.append(item)
+        ###
+
+        # updating indexes
+        row_start += 1
+        row_stop -= 1
+
+        col_start += 1
+        col_stop -= 1
+
+        cycles_count -= 1
+        start_point += 1
+
+    return result
+
+# snail_path(test3)
+snail_path(matrix)
+
+
+def test_snail_path():
+    assert snail_path([]) == []
+
+    assert snail_path([[]]) == []
+
+    assert snail_path([[0]]) == [0]
+
+    assert snail_path([[1, 2, 3, 4]]) == [1, 2, 3, 4]   #
+
+    assert snail_path([[1], [2], [3], [4]]) == [1, 2, 3, 4]
+
+    assert snail_path([
+        [1, 2],
+        [3, 4],
+    ]) == [1, 2, 4, 3]
+
+    assert snail_path([
+        [None, 0, True],
+        [-1, '', False],
+        [[], 'foo', object],
+    ]) == [None, 0, True, False, object, 'foo', [], -1, '']
+
+    assert snail_path([
+
+        [1, 2,  3,  4 ],
+        [5, 6,  7,  8 ],
+        [9, 10, 11, 12],
+
+    ]) == [1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7]
 
 
 if __name__ == '__main__':
-    print(visualize(MONEY))
+    test_snail_path()
     # test_visualize()
     # test_sum_of_intervals()
     # test_enlarge()
