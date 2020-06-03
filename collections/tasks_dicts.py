@@ -192,10 +192,130 @@ def test_find_where():
     assert find_where(BOOKS, BOOKS[2]) == BOOKS[2]
 
 
+def to_roman(source):
+    if source == 0:
+        return ''
+    arab = {
+        1000:   'M',
+        500:    'D',
+        100:    'C',
+        50:     'L',
+        10:     'X',
+        5:      'V',
+        1:      'I',        
+    }
+    decomp = {}
+    num = source
+    base = list(arab.keys())  
+    
+    # ToDo: insert 9 as key in dict 
+    
+    #
+    
+    for delim in base:
+        order = num // delim
+        if order != 0:
+            residual = num % delim
+            decomp[delim] = order
+            num = residual
+    
+    copybase = base[:]
+    copybase.insert(0, 0)
+    copybase =copybase[:-1]    
+    result = ''    
+    # for order, prev in zip(base, copybase):
+        # if decomp.get(order) and decomp.get(order) != 0:
+            
+            # if prev == 5 and order == 1:
+                # temp = 'IX'
+                
+            # if decomp.get(order) == 4:
+                # temp = arab[order] + arab[prev]
+            
+            # if not(decomp.get(prev) == 1) and not decomp.get(order) == 4:
+                # temp = arab[order] * decomp.get(order)
+                
+                # print('e;se')
+                # print(temp)
+            # result += temp
+    # return result
+
+print('result: ')
+print(to_roman(9))
+
+# 5: 1,  1: 4
+
+def test_to_roman():
+    
+    assert to_roman(9) == 'IX'
+    # assert to_roman(59) == 'LIX'
+    # assert to_roman(93) == 'XCIII'
+    # assert to_roman(911) == 'CMXI'
+    
+    
+    assert to_roman(0) == ''
+    assert to_roman(1) == 'I'
+    assert to_roman(2) == 'II'
+    assert to_roman(4) == 'IV'
+    assert to_roman(5) == 'V'
+    assert to_roman(6) == 'VI'
+    assert to_roman(27) == 'XXVII'
+    assert to_roman(48) == 'XLVIII'
+    
+    assert to_roman(141) == 'CXLI'
+    assert to_roman(163) == 'CLXIII'
+    assert to_roman(402) == 'CDII'
+    assert to_roman(575) == 'DLXXV'
+    assert to_roman(1024) == 'MXXIV'
+    assert to_roman(2020) == 'MMXX'
+    assert to_roman(3000) == 'MMM'
+
+
+def to_arabic():
+    roman = {
+        'I': 1,
+        'V': 5,
+        'X': 10,
+        'L': 50,
+        'C': 100,
+        'D': 500,
+        'M': 1000    
+    }
+
+
+def test_to_arabic():
+    assert to_arabic('') == 0
+    assert to_arabic('I') == 1
+    assert to_arabic('II') == 2
+    assert to_arabic('IV') == 4
+    assert to_arabic('V') == 5
+    assert to_arabic('VI') == 6
+    assert to_arabic('XXVII') == 27
+    assert to_arabic('XLVIII') == 48
+    assert to_arabic('LIX') == 59
+    assert to_arabic('XCIII') == 93
+    assert to_arabic('CXLI') == 141
+    assert to_arabic('CLXIII') == 163
+    assert to_arabic('CDII') == 402
+    assert to_arabic('DLXXV') == 575
+    assert to_arabic('CMXI') == 911
+    assert to_arabic('MXXIV') == 1024
+    assert to_arabic('MMXX') == 2020
+    assert to_arabic('MMM') == 3000
+
+
 if __name__ == "__main__":
-    test_find_where()
+    # test_to_arabic()
+    # test_to_roman()
+    # test_find_where()
     # test_merged()
     # test_scrabble()
     # test_build_query_string()
     # test_to_rna()
     pass
+
+
+
+
+# cd E:\WORK\python\hexletpy\collections
+# c:\Users\ivan\Work\python\envs\py37\Scripts\activate
