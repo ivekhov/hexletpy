@@ -1,7 +1,9 @@
 def compose(f1, f2):
-    def inner(arg):
-        return f1(f2(arg))
-    return inner
+    # def inner(arg):
+        # return f1(f2(arg))
+    # return inner
+    
+    return lambda x: f1(f2(x))
 
 def add5(x):
     return x + 5
