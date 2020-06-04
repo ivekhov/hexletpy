@@ -196,62 +196,67 @@ def to_roman(source):
     if source == 0:
         return ''
     arab = {
-        1000:   'M',
-        500:    'D',
-        100:    'C',
-        50:     'L',
-        10:     'X',
-        5:      'V',
-        1:      'I',        
+        1000:   'M',    #3      # 19 = 1 : 10, 1 : 5, 1 : 4
+        500:    'D',    #1
+        100:    'C',    #4
+        50:     'L',    #1
+        10:     'X',    #1
+        5:      'V',    #1
+        1:      'I',    #4   
     }
-    decomp = {}
+    decomp = arab.copy()
     num = source
-    base = list(arab.keys())  
-    
-    # ToDo: insert 9 as key in dict 
-    
-    #
-    
-    for delim in base:
+    for delim in decomp.keys():
         order = num // delim
         if order != 0:
             residual = num % delim
             decomp[delim] = order
             num = residual
+        else:
+            decomp[delim] = 0    
     
-    copybase = base[:]
-    copybase.insert(0, 0)
-    copybase =copybase[:-1]    
-    result = ''    
-    # for order, prev in zip(base, copybase):
-        # if decomp.get(order) and decomp.get(order) != 0:
-            
-            # if prev == 5 and order == 1:
-                # temp = 'IX'
-                
-            # if decomp.get(order) == 4:
-                # temp = arab[order] + arab[prev]
-            
-            # if not(decomp.get(prev) == 1) and not decomp.get(order) == 4:
-                # temp = arab[order] * decomp.get(order)
-                
-                # print('e;se')
-                # print(temp)
-            # result += temp
-    # return result
+    result = []
+    
+    orders = list(decomp.keys())
+    orders.reverse()
+    new = {}
+    for item in orders:
+        new[item] = decomp[item]
+    decomp = new
+    ixs = list(range(len(orders)))
+    
+    decomp.update({0: 0})
+    orders.append(0)
+    flag = True
+    for ix in ixs:
+        if decomp[orders[ix]] != 0 and  ((decomp[orders[ix]] * orders[ix] + \
+                decomp[orders[ix+1]] * orders[ix+1]) % 9 == 0):
+            temp = 'IX'
+            result.insert(0, temp)
+            flag = False
+            continue
+        
+        elif decomp[orders[ix]] == 4 and flag:
+            temp = 'IV'
+            flag = False
+            result.insert(0, temp)
+            continue 
+        else:
+            temp = arab[orders[ix]] * decomp[orders[ix]]
+            result.insert(0, temp)
+        
+    print(decomp)
+    return ''.join(result)
 
+print(to_roman(59))
 print('result: ')
-print(to_roman(9))
-
-# 5: 1,  1: 4
 
 def test_to_roman():
     
     assert to_roman(9) == 'IX'
-    # assert to_roman(59) == 'LIX'
-    # assert to_roman(93) == 'XCIII'
-    # assert to_roman(911) == 'CMXI'
-    
+    assert to_roman(59) == 'LIX'
+    assert to_roman(93) == 'XCIII'
+    assert to_roman(911) == 'CMXI'
     
     assert to_roman(0) == ''
     assert to_roman(1) == 'I'
@@ -319,3 +324,42 @@ if __name__ == "__main__":
 
 # cd E:\WORK\python\hexletpy\collections
 # c:\Users\ivan\Work\python\envs\py37\Scripts\activate
+
+
+
+
+        # if key == 1:
+            # if decomp[1] + decomp[5] == 5:
+                # result.insert(0, 'IX')
+            # elif value == 4:
+                # result.insert(0, 'IV')
+            # else:
+                # result.insert(0, 'I' * value)
+        
+        # if key == 10:
+            # if decomp[10] + decomp[50] == 5:
+                # result.insert(0, 'IX')
+            # elif value == 4:
+                # result.insert(0, 'IV')
+            # else:
+                # result.insert(0, 'X' * value)
+
+        # if key == 100:
+            # if decomp[100] + decomp[500] == 5:
+                # result.insert(0, 'IX')
+            # elif value == 4:
+                # result.insert(0, 'IV')
+            # else:
+                # result.insert(0, 'C' * value)
+                # 1
+        # if key == 5 and value != 0 and decomp[1] + decomp[5] != 5:
+            # result.insert(0, 'V')
+        
+        # if key == 50 and value != 0 and decomp[10] + decomp[50] != 5:
+            # result.insert(0, 'L')
+
+        # if key == 500 and value != 0 and decomp[100] + decomp[500] != 5:
+            # result.insert(0, 'D')
+
+    # # print(decomp)
+    # return ''.join(result)
