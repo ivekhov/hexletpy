@@ -133,6 +133,43 @@ n = 4
 # def f():
     
 
+    
+# create list with deltas - first function with one output
+# 
+    
+def f(num , source):
+    return some_list with deltas of main source
+    
+    # list of deltas - ?
+    deltas = list(map(lambda x: abs(x - num), source ))
+    
+    # min in list - ?
+    min(deltas)
+    
+    
+    # ? possible tasks
+    # use filter - ?
+    
+    #
+    # take element of seq
+    # compare to minimum
+    # return if element == minimum
+    
+    
+
+    
+def main_f():
+        
+    return filter (f, source )
+    
+    
+    #  not use
+    return map( f, list )
+
+  
+
+  
+  
 a = filter(f, source)
     
     
