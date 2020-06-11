@@ -1,14 +1,29 @@
 from collections import Counter
 
 
-def histo(source, min_value=None, max_value=None, bar_char='#'):
-    min_value=min(source)
-    max_value=max(source)    
-    print(source, min_value, max_value, bar_char)
+def histo(samples, min_value=None, max_value=None, bar_char='#'):
+    loc_cnt = Counter(samples)
+    result = ''
+    if not min_value:
+        min_value = min(loc_cnt.keys())
+    if not max_value:
+        max_value = max(loc_cnt.keys())
+
+    def exclude_zero(x):
+        if x == 0:
+            return ''
+        return ' ' + str(x)
+    for num in range(min_value, max_value + 1):
+        # if i need a print
+        # print("{}|{} {}".format(num, bar_char * loc_cnt[num], exclude_zero(loc_cnt[num])))
+        result += (str(num) + '|' + (bar_char * loc_cnt[num]) + 
+            exclude_zero(loc_cnt[num]) + "\n")
+
+    return result[:-1]
 
 
-source = [1, 2, 3, 4, 5]
-histo(source, min_value=42)
+# res = histo([], min_value=10, max_value=15)
+# print(res.strip())
 
 
 BIG_SAMPLE = (  # noqa: WPS317
@@ -80,5 +95,28 @@ def test_histo():
 
 
 if __name__ == '__main__':
-    # test_histo()
+    test_histo()
     pass
+
+
+'''
+example solution:
+...
+    axis = range(min_value, max_value + 1)
+    counts = Counter(samples)
+    
+    lines = map(
+        lambda value, count: '{}|{}{}'.format(
+            value,
+            bar_char * count,
+            ' ' + str(count) if count else '',
+        ),
+        axis,
+        map(lambda key: counts[key], axis),
+    )
+
+    return '\n'.join(lines)
+...
+
+
+'''
