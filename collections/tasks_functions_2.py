@@ -20,13 +20,36 @@ def test_compose():
     assert rgb2hex(r=198, g=1, b=35) == '#c60123'
 
 
-def ip2int():
-    pass
+def ip2int(ip):
+    ip_list = ip.split('.')
+    ip_items = list(map(int, ip_list))
+
+    def int2bin(num):
+        temp = bin(num)
+        short = temp[2:]
+        while len(short) < 8:
+            short = '0' + short
+        return short
+
+    temp = list(map(int2bin, ip_items))
+    return int(''.join(temp), 2)
 
 
-def int2ip():
-    pass
+def int2ip(num):
+    temp_bin = bin(num)[2:]
+    arr = []
+    chunk = 8
+    start = 0
+    for i in range(1, 5):
+        if temp_bin[start:chunk * i]:
+            arr.append(str(temp_bin[start: chunk * i]))
+            start += chunk
 
+    while len(arr) < 4:
+        arr.append('0')
+
+    temp = list(map(lambda x: int(x, 2), arr)) 
+    return '.'.join(list(map(str, temp)))
 
 ZEROES = '0.0.0.0'  # noqa: S104
 
