@@ -46,7 +46,6 @@ def test_round_robin():
     assert ip2int(int2ip(2149583361)) == 2149583361
 
 
-
 if __name__ == '__main__':
     test_ip2int()
     test_int2ip()
