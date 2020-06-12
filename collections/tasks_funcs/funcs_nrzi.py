@@ -1,8 +1,32 @@
 def decode(row):
-    return row
+    if not row:
+        return ''
+    curr = 0
+    prev = 0
+    def invert(x):
+        if x == 0:
+            return 1
+        return 0
 
-row = '¯|___|¯¯¯¯¯|___|¯|_|¯'
-print(decode(row))
+    # work
+    result = []
+    for symb in list(row):
+        if symb == '|':
+            curr = invert(curr)
+        if prev == 1:
+            curr = invert(curr)
+        else:
+            result.append(str(curr))
+        prev = curr
+
+    return ''.join(result)
+
+# print()
+# row = '_|¯|____|¯|__|¯¯¯'
+# resp = '011000110100'
+# print(row)
+# print(decode(row))  # 010000100111  wrong
+# print(resp)         # 011000110100  correct
 
 
 def test_decode():
@@ -15,5 +39,5 @@ def test_decode():
 
 
 if __name__ == '__main__':
-#     test_decode()
+    test_decode()
     pass
