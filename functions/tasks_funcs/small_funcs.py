@@ -60,9 +60,93 @@ def test_filter_map():
 
     assert filter_map(safe_sqrt, []) == []
     assert filter_map(safe_sqrt, [4, -5, -2, 9]) == [2.0, 3.0]  # noqa: WPS221
+###############################################################################
 
+
+
+from operator import add, mul
+
+'''
+partial_apply
+partial_apply принимает функцию от двух аргументов и первый аргумент,
+ а возвращает замыкание — функцию, которая примет второй аргумент и 
+ наконец применит замкнутую функцию к обоим аргументам (и вернёт результат).
+
+Пример использования:
+
+# >>> def greet(name, surname):
+# ...     return 'Hello, {name} {surname}!'.format(name=name, surname=surname)
+# ...
+# >>> f = partial_apply(greet, 'Dorian')
+# >>> f('Grey')
+# 'Hello, Dorian Grey!'
+# >>>
+
+
+
+flip
+Функция flip принимает в качестве единственного аргумента функцию от 
+двух аргументов. Возвращаемое замыкание должно также принять 
+два аргумента, а затем применить к ним замкнутую функцию, 
+но аргументы подставить в обратном порядке.
+ Таким образом flip как бы "переворачивает" ("flips") исходную функцию.
+
+Пример использования:
+
+# >>> def greet(name, surname):
+# ...     return 'Hello, {name} {surname}!'.format(name=name, surname=surname)
+# ...
+# >>> f = flip(greet)
+# >>> f('Christian', 'Teodor')
+# 'Hello, Teodor Christian!'
+'''
+
+
+def partial_apply(some_func, first_arg):
+    def closure(second_arg):
+        return some_func(first_arg, second_arg)
+    return closure
+
+
+def greet(name, surname):
+    return 'Hello, {name} {surname}!'.format(name=name, surname=surname)
+
+# f = partial_apply(greet, 'Dorian')
+# f('Grey')
+
+def test_partial_apply():
+    assert list(
+        map(partial_apply(add, 10), [1, 2, 3]),  # noqa: WPS221
+    ) == [11, 12, 13]
+
+    assert list(
+        map(partial_apply(mul, '*'), [2, 3, 4]),  # noqa: WPS221
+    ) == [
+        '**',
+        '***',
+        '****',
+    ]
+
+
+def flip():
+    pass
+
+
+def test_flip():
+    assert flip(mul)(3, '*') == '***'
+
+
+def test_both():
+    assert list(
+        map(partial_apply(flip(mul), 5), "!?&"),
+    ) == [
+        '!!!!!',
+        '?????',
+        '&&&&&',
+    ]
 
 
 if __name__ == '__main__':
-    test_filter_map()    
+    test_partial_apply()
+#     test_filter_map()
     pass
