@@ -12,7 +12,7 @@ is_even должна возвращать True, если число чётное
 
 '''
 
-def is_even_s(num):
+def is_even(num):
     if num == 0:
         return True
     if num == 1:
@@ -20,7 +20,7 @@ def is_even_s(num):
     return is_even(num % 2)
 
 
-def is_odd_s(num):
+def is_odd(num):
     if num == 1:
         return True
     if num == 0:
@@ -29,29 +29,29 @@ def is_odd_s(num):
 
 ######## bad
 
-def is_even(num):
-    if num == 0:
-        return True
-    if is_odd(num - 1):
-        return False
-    return is_even(num % 2)
+# def is_even_(num):
+#     if num == 0:
+#         return True
+#     if is_odd(num - 1):
+#         return False
+#     return is_even(num % 2)
 
 
-def is_odd(num):
-    if num == 1:
-        return True
-    if is_even(num - 1):
-        return False
-    return is_odd(num % 2)
+# def is_odd(num):
+#     if num == 1:
+#         return True
+#     if is_even(num - 1):
+#         return False
+#     return is_odd(num % 2)
 
 ##############
+# exxample
+# def is_odd_x(number):
+#     return False if number == 0 else is_even(number - 1)
 
-def is_odd_x(number):
-    return False if number == 0 else is_even(number - 1)
 
-
-def is_even_x(number):
-    return True if number == 0 else is_odd(number - 1)
+# def is_even_x(number):
+#     return True if number == 0 else is_odd(number - 1)
 #######################################################3
 
 
