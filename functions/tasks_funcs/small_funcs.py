@@ -48,8 +48,8 @@ def make_stars(x):
     return False, ''
 
 
-for s in filter_map(make_stars, [1, 0, 5, -5, 2]):
-    print(s)
+# for s in filter_map(make_stars, [1, 0, 5, -5, 2]):
+#     print(s)
 
 
 def test_filter_map():
@@ -61,7 +61,6 @@ def test_filter_map():
     assert filter_map(safe_sqrt, []) == []
     assert filter_map(safe_sqrt, [4, -5, -2, 9]) == [2.0, 3.0]  # noqa: WPS221
 ###############################################################################
-
 
 
 from operator import add, mul
@@ -111,8 +110,6 @@ def partial_apply(some_func, first_arg):
 def greet(name, surname):
     return 'Hello, {name} {surname}!'.format(name=name, surname=surname)
 
-# f = partial_apply(greet, 'Dorian')
-# f('Grey')
 
 def test_partial_apply():
     assert list(
@@ -128,8 +125,10 @@ def test_partial_apply():
     ]
 
 
-def flip():
-    pass
+def flip(some_func):
+    def closure(first_arg, second_arg):
+        return some_func(second_arg, first_arg)
+    return closure
 
 
 def test_flip():
@@ -144,9 +143,81 @@ def test_both():
         '?????',
         '&&&&&',
     ]
+###############################################################################
+
+from functools import reduce
+from operator import truth
+from operator import add
+from operator import getitem
+
+
+def keep_truthful(source):
+    try:
+        return list(filter(truth, source))
+    except BaseException:
+        return 'All falsy values sholud be filtered out!'
+
+
+def abs_sum(source):
+    return reduce(add, list(map(abs, source)))
+
+
+def walk(idict, iiter):
+    return reduce(getitem, iiter, idict)
+
+
+# walk({'a': {7: {'b': 42}}}, ["a", 7, "b"])
+# # 42
+
+# idict = {'a': {7: {'b': 42}}}
+# iiter =  ["a", 7, "b"]
+
+# walk({'a': {7: {'b': 42}}}, ["a", 7])
+# # {'b': 42}
+
+FALSES = (False, (), None, '', 0)
+TRUTHS = (True, (1,), '!', -5)
+
+
+def test_keep_truthful():
+    assert list(keep_truthful(FALSES)) == [], (
+        'All falsy values sholud be filtered out!'
+    )
+    assert list(keep_truthful(TRUTHS)) == list(TRUTHS), (
+        'All truthful values sholud be keeped!'
+    )
+    assert list(keep_truthful([0, 1, 0])) == [1]
+
+
+def test_abs_sum():
+    assert abs_sum([0]) == 0
+    assert abs_sum((-42,)) == 42
+    assert abs_sum([-3, -2, -1, 0, 1, 2, 3]) == 12  # noqa: WPS221
+
+
+def test_walk():
+    city = {
+        'Pine': {
+            '5': 'School #42',
+        },
+        'Elm': {
+            '13': {
+                '1': 'Appartments #2, Elm st.13',
+            },
+        },
+    }
+    assert walk(city, ['Pine', '5']) == city['Pine']['5']
+    path = ['Elm', '13', '1']
+    assert walk(city, path) == city['Elm']['13']['1']
 
 
 if __name__ == '__main__':
-    test_partial_apply()
+    test_keep_truthful()
+    test_abs_sum()
+    test_walk()
+    # test_partial_apply()
+    # test_flip()
+    # test_both()
 #     test_filter_map()
+    print("Tests passed")
     pass
